@@ -1,2 +1,2 @@
 # Air-Balloon
-Mini game for mobile and browsers
+Mini game for mobiles and browsers
