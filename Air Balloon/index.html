@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Air Balloon Game</title>
+    <script src="js/main.js"></script>
+</head>
+<body>
+    <canvas id="gameScreen" width="1200px" height="720px"
+            style="background-color: aliceblue">
+
+    </canvas>
+
+
+    <script>
+        let canvas = document.getElementById('gameScreen');
+        let ctx = canvas.getContext('2d');
+        Game.play(ctx);
+    </script>
+</body>
+</html>
