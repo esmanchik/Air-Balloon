@@ -12,6 +12,7 @@ class Background {
     draw(canvas){
         let screenHeight = 720.0;
         let screenWidth = 1200.0;
+        let background = this.image;
         let scale = background.height / screenHeight;
         let scaledWidth = background.width/scale;
         canvas.drawImage(background, 0, 0, scaledWidth, screenHeight);
