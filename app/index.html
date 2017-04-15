@@ -14,8 +14,8 @@
 
     <script>
         let canvas = document.getElementById('gameScreen');
-        let ctx = canvas.getContext('2d');
-        Game.play(ctx);
+        console.log(canvas.constructor.name);
+        Game.play(canvas);
     </script>
 </body>
 </html>
