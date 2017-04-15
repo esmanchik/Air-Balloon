@@ -1,23 +1,32 @@
 class Background {
     /**
+     * @namespace 
+     * @property {HTMLCanvasElement} this.canvas
+     */
+    
+    /**
+     * @param {HTMLCanvasElement} canvas
      * @param {Image} image
      */
-    constructor(image){
-       this.image = image;
+    constructor(canvas, image){
+        this.canvas = canvas;
+        this.image = image;
+        this.offset = 0;
     }
 
     /**
      * @param {CanvasRenderingContext2D} canvas
      */
     draw(canvas){
-        let screenHeight = 720.0;
-        let screenWidth = 1200.0;
+        let screenHeight = this.canvas.height;
+        let screenWidth = this.canvas.width;
         let background = this.image;
-        let scale = background.height / screenHeight;
-        let scaledWidth = background.width/scale;
-        canvas.drawImage(background, 0, 0, scaledWidth, screenHeight);
-        if(scaledWidth < screenWidth){
-            canvas.drawImage(background, scaledWidth, 0, scaledWidth, screenHeight);
+        let scale = this.getScale();
+        let scaledWidth = background.width / scale;
+        let x = -this.offset;
+        while (x < screenWidth) {
+            canvas.drawImage(background, x, 0, scaledWidth, screenHeight);
+            x += scaledWidth;
         }
     }
 
@@ -25,22 +34,43 @@ class Background {
      *
      */
     update(){
-
+        this.offset += this.canvas.width / 1000.0;
+        let scaledWidth = this.image.width / this.getScale();
+        while (scaledWidth < this.offset) {
+            this.offset -= scaledWidth;
+        }
+    }
+    
+    /**
+     * @returns {Number}
+     */
+    getScale() {
+        return this.image.height / this.canvas.height;
     }
 }
 
-class Game {
+class Game {    
     /**
-     * @param {CanvasRenderingContext2D} context
+     * @param {HTMLCanvasElement} canvas
      */
-    static play(context){
+    constructor(canvas) {
+        this.canvas = canvas;
+    }
 
+    static play(canvas){
+        let game = new Game(canvas);
+        let context = canvas.getContext('2d');
         let backgroundImage = new Image();
         backgroundImage.addEventListener('load', ()=>{
-           let background = new Background(backgroundImage);
-           background.draw(context);
+            let background = new Background(canvas, backgroundImage);
+            let gameLoop = () => {
+                background.update();
+                background.draw(context);
+                window.setTimeout(gameLoop, 1000 / 25);
+            }
+            window.setTimeout(gameLoop, 1000 / 25);
         }, false);
-        backgroundImage.src = 'img/bg.jpg';
+        backgroundImage.src = 'img/bg.jpg';        
     }
 }
 
