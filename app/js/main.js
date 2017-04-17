@@ -66,11 +66,11 @@ class Game {
             let gameLoop = () => {
                 background.update();
                 background.draw(context);
-                window.setTimeout(gameLoop, 1000 / 25);
-            }
-            window.setTimeout(gameLoop, 1000 / 25);
+                window.setTimeout(gameLoop, 1000 / 60);
+            };
+            window.setTimeout(gameLoop, 1000 / 60);
         }, false);
-        backgroundImage.src = 'img/bg.jpg';        
+        backgroundImage.src = 'img/bg.jpg';
     }
 }
 

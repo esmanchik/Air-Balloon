@@ -3,15 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <title>Air Balloon Game</title>
+
+    <link rel="stylesheet" href="css/main.css">
     <script src="js/main.js"></script>
 </head>
 <body>
-    <canvas id="gameScreen" width="1200px" height="720px"
-            style="background-color: aliceblue">
+    <canvas id="gameScreen" width="1200px" height="720px"></canvas>
 
-    </canvas>
-
-
+    <audio src="audio/Hunter.mp3" autoplay loop></audio>
     <script>
         let canvas = document.getElementById('gameScreen');
         console.log(canvas.constructor.name);
