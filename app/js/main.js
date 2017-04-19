@@ -33,7 +33,8 @@ class Background {
     /**
      *
      */
-    update(){
+    update(moving){
+        if (!moving) return;
         this.offset += this.canvas.width / 1000.0;
         let scaledWidth = this.image.width / this.getScale();
         while (scaledWidth < this.offset) {
@@ -125,9 +126,11 @@ class Game {
             balloonImage.addEventListener('load', () => {
                 let background = new Background(canvas, backgroundImage);
                 this.balloon = new Balloon(canvas, balloonImage);
+                let moving = true;
                 let gameLoop = () => {
                     // update
-                    background.update();
+                    moving = this.balloon.altitude > 0;
+                    background.update(moving);
                     this.balloon.update();
                     // draw
                     background.draw(context);
