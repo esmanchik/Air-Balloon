@@ -72,9 +72,11 @@ class Balloon {
         let scale = this.getScale();
         let height = balloonImage.height / scale;
         let y = this.canvas.height - height - this.altitude;
-        canvas.drawImage(balloonImage, 100, y, 
+        let x = this.image.width / scale;
+        canvas.drawImage(balloonImage, x, y, 
                          balloonImage.width / scale, height);
-        canvas.fillText(this.temperature, 100, y - height / 10);
+        canvas.fillText(this.temperature, 2 * x, y + height -  height / 5);
+        canvas.fillText(this.heating, 2 * x, y + height - height / 10);
     }
 
     /**
@@ -86,7 +88,10 @@ class Balloon {
         let g = 9.8;
         let mass = 10;
         let gravity = mass * g * g;
-        let density = 1 + (this.canvas.height - this.altitude + scaledBalloonHeight / 2) * this.temperature / 1000.0;
+        let maxAltApproach = this.canvas.height - this.altitude;
+        if (maxAltApproach < 0) maxAltApproach = 0;
+        maxAltApproach -= scaledBalloonHeight / 2;
+        let density = 1 + maxAltApproach * this.temperature / 1000.0;
         let volume = 50;
         let archimedes = volume * density * g;
         let a = (archimedes - gravity) / mass;
@@ -95,7 +100,7 @@ class Balloon {
             this.altitude += dy;
         }
         let lowest = this.temperature > 0 || this.heating > this.cooling;
-        let highest = this.temperature < 100 || this.heating < this.cooling;
+        let highest = this.temperature < 10 || this.heating < this.cooling;
         if (lowest && highest) {
             this.temperature += this.heating - this.cooling;
         }
