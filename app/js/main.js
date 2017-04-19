@@ -60,15 +60,19 @@ class Game {
     static play(canvas){
         let game = new Game(canvas);
         let context = canvas.getContext('2d');
+        let balloonImage = new Image();
         let backgroundImage = new Image();
-        backgroundImage.addEventListener('load', ()=>{
-            let background = new Background(canvas, backgroundImage);
-            let gameLoop = () => {
-                background.update();
-                background.draw(context);
-                window.setTimeout(gameLoop, 1000 / 60);
-            };
-            window.setTimeout(gameLoop, 1000 / 60);
+        backgroundImage.addEventListener('load', () => {
+            balloonImage.addEventListener('load', () => {
+                let background = new Background(canvas, backgroundImage);
+                let gameLoop = () => {
+                    background.update();
+                    background.draw(context);
+                    context.drawImage(balloonImage, 100, 100, balloonImage.width / 15.0, balloonImage.height / 15.0);
+                };
+                window.setInterval(gameLoop, 1000 / 60);
+            }, false);
+           balloonImage.src = 'img/balloon.png';
         }, false);
         backgroundImage.src = 'img/bg.jpg';
     }
