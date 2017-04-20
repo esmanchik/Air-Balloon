@@ -75,8 +75,8 @@ class Balloon {
         let x = this.image.width / scale;
         canvas.drawImage(balloonImage, x, y, 
                          balloonImage.width / scale, height);
-        canvas.fillText(this.temperature, 2 * x, y + height -  height / 5);
-        canvas.fillText(this.heating, 2 * x, y + height - height / 10);
+        // canvas.fillText(this.temperature, 2 * x, y + height -  height / 5);
+        // canvas.fillText(this.heating, 2 * x, y + height - height / 10);
     }
 
     /**
@@ -143,11 +143,11 @@ class Game {
                     // draw
                     background.draw(context);
                     this.balloon.draw(context);
-                    // context.drawImage(coinImage, 500, 500, coinImage.width / 5, coinImage.height / 5);
-                    // context.drawImage(coinImage, 600, 600, coinImage.width / 5, coinImage.height / 5);
-                    // context.drawImage(coinImage, 700, 500, coinImage.width / 5, coinImage.height / 5);
-                    // context.drawImage(coinImage, 800, 600, coinImage.width / 5, coinImage.height / 5);
-                    // context.drawImage(coinImage, 900, 500, coinImage.width / 5, coinImage.height / 5);
+                    context.drawImage(coinImage, 500, 500, coinImage.width / 5, coinImage.height / 5);
+                    context.drawImage(coinImage, 600, 600, coinImage.width / 5, coinImage.height / 5);
+                    context.drawImage(coinImage, 700, 500, coinImage.width / 5, coinImage.height / 5);
+                    context.drawImage(coinImage, 800, 600, coinImage.width / 5, coinImage.height / 5);
+                    context.drawImage(coinImage, 900, 500, coinImage.width / 5, coinImage.height / 5);
                 };
                 window.setInterval(gameLoop, 1000 / 60);
             }, false);
@@ -157,5 +157,3 @@ class Game {
         backgroundImage.src = 'img/bg.jpg';
     }
 }
-
-// width height for screen
