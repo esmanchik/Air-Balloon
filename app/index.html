@@ -6,29 +6,17 @@
 
     <link rel="stylesheet" href="css/main.css">
     <script src="js/main.js"></script>
-<<<<<<< Updated upstream
     <script>
         let game = new Game();
     </script>
 </head>
 <body>
-    <canvas id="gameScreen" width="1200px" height="720px" 
-            onmousedown="javascript: game.balloon.heating += 0.1;"></canvas>
+    <canvas id="gameScreen" onmousedown="game.balloon.heating += 0.1;"></canvas>
+    <audio src="audio/Hunter.mp3" autoplay loop></audio>
 
-=======
-
-</head>
-<body>
-    <canvas id="gameScreen" width="100%"></canvas>
-
-
-
-    <audio src="audio/Hunter.mp3" autoplay loop muted></audio>
->>>>>>> Stashed changes
     <script>
         let canvas = document.getElementById('gameScreen');
         game.play(canvas);
     </script>
-    <audio src="audio/Hunter.mp3" autoplay loop></audio>
 </body>
 </html>

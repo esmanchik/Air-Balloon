@@ -111,7 +111,7 @@ class Balloon {
      * @returns {Number}
      */
     getScale() {
-        return 15.0;
+        return 0.5;
     }
 }
 
@@ -142,16 +142,12 @@ class Game {
                     this.balloon.update();
                     // draw
                     background.draw(context);
-<<<<<<< Updated upstream
                     this.balloon.draw(context);
-=======
-                    context.drawImage(balloonImage, 100, 200, balloonImage.width / 0.5, balloonImage.height / 0.5);
-                    context.drawImage(coinImage, 500, 500, coinImage.width / 5, coinImage.height / 5);
-                    context.drawImage(coinImage, 600, 600, coinImage.width / 5, coinImage.height / 5);
-                    context.drawImage(coinImage, 700, 500, coinImage.width / 5, coinImage.height / 5);
-                    context.drawImage(coinImage, 800, 600, coinImage.width / 5, coinImage.height / 5);
-                    context.drawImage(coinImage, 900, 500, coinImage.width / 5, coinImage.height / 5);
->>>>>>> Stashed changes
+                    // context.drawImage(coinImage, 500, 500, coinImage.width / 5, coinImage.height / 5);
+                    // context.drawImage(coinImage, 600, 600, coinImage.width / 5, coinImage.height / 5);
+                    // context.drawImage(coinImage, 700, 500, coinImage.width / 5, coinImage.height / 5);
+                    // context.drawImage(coinImage, 800, 600, coinImage.width / 5, coinImage.height / 5);
+                    // context.drawImage(coinImage, 900, 500, coinImage.width / 5, coinImage.height / 5);
                 };
                 window.setInterval(gameLoop, 1000 / 60);
             }, false);
