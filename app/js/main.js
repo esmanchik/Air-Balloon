@@ -125,9 +125,12 @@ class Game {
      */
     play(canvas){
         let context = canvas.getContext('2d');
+        let coinImage = new Image();
         let balloonImage = new Image();
         let backgroundImage = new Image();
         backgroundImage.addEventListener('load', () => {
+            canvas.width = backgroundImage.naturalWidth;
+            canvas.height = backgroundImage.naturalHeight;
             balloonImage.addEventListener('load', () => {
                 let background = new Background(canvas, backgroundImage);
                 this.balloon = new Balloon(canvas, balloonImage);
@@ -139,11 +142,21 @@ class Game {
                     this.balloon.update();
                     // draw
                     background.draw(context);
+<<<<<<< Updated upstream
                     this.balloon.draw(context);
+=======
+                    context.drawImage(balloonImage, 100, 200, balloonImage.width / 0.5, balloonImage.height / 0.5);
+                    context.drawImage(coinImage, 500, 500, coinImage.width / 5, coinImage.height / 5);
+                    context.drawImage(coinImage, 600, 600, coinImage.width / 5, coinImage.height / 5);
+                    context.drawImage(coinImage, 700, 500, coinImage.width / 5, coinImage.height / 5);
+                    context.drawImage(coinImage, 800, 600, coinImage.width / 5, coinImage.height / 5);
+                    context.drawImage(coinImage, 900, 500, coinImage.width / 5, coinImage.height / 5);
+>>>>>>> Stashed changes
                 };
                 window.setInterval(gameLoop, 1000 / 60);
             }, false);
-           balloonImage.src = 'img/balloon.png';
+            balloonImage.src = 'img/balloon.svg';
+            coinImage.src = 'img/coin.png';
         }, false);
         backgroundImage.src = 'img/bg.jpg';
     }
