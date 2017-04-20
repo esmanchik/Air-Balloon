@@ -1,29 +1,11 @@
+@import "keyframes"
+
 body
   margin: 0
   padding: 0
   height: 100%
   background-color: #599ed5
-
-  @-webkit-keyframes animate_background
-    from
-      background-position: 0 0
-    to
-      background-position: -1920px 0
-  @-moz-keyframes animate_background
-    from
-      background-position: 0 0
-    to
-      background-position: -1920px 0
-  @-o-keyframes animate_background
-    from
-      background-position: 0 0
-    to
-      background-position: -1920px 0
-  @keyframes animate_background
-    from
-      background-position: 0 0
-    to
-      background-position: -1920px 0
+  font-family: 'Chewy', cursive
 
 #gameScreen
   width: 100%
@@ -31,30 +13,30 @@ body
   position: absolute
   bottom: 0
 
-.container
-  background: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url(../img/bg.jpg) 0 0 repeat
+.wrapper
+  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(../img/bg.jpg) 0 0 repeat
   background-size: cover
-  -webkit-animation: animate_background 60s linear 0s infinite
-  -moz-animation: animate_background 60s linear 0s infinite
-  -o-animation: animate_background 60s linear 0s infinite
-  animation: animate_background 60s linear 0s infinite
-  .main-screen
+  -webkit-animation: animate_bg 60s linear 0s infinite
+  -moz-animation: animate_bg 60s linear 0s infinite
+  -o-animation: animate_bg 60s linear 0s infinite
+  animation: animate_bg 60s linear 0s infinite
+  .container
     display: flex
     height: 100vh
     margin: auto
-    .img-container
+    .popup-container
       position: relative
-      width: 620px
+      width: 600px
       height: 408px
       margin: auto
-      .title-bg
+      .popup-bg
         width: 600px
         margin: auto
       .button-container,.panda-container
-        width: 140px
+        width: 400px
         position: absolute
-        top: 35px
-        right: 0
+        top: 150px
+        right: 100px
         li
           list-style: none
           .btn
@@ -65,39 +47,109 @@ body
               -webkit-transform-origin: 50% 50%
               -webkit-animation-iteration-count: infinite
               -webkit-animation-timing-function: ease
+        .cancel-btn, .cancel-btn-top3, .submit-btn, .btn-play, .btn-user, .btn-settings
+          cursor: pointer
+          position: absolute
+          width: 50px
+          right: -80px
+          top: -75px
+          &:hover
+            -webkit-animation-name: shake
+            -webkit-animation-duration: 1s
+            -webkit-transform-origin: 50% 50%
+            -webkit-animation-iteration-count: infinite
+            -webkit-animation-timing-function: ease
+        .cancel-btn
+          top: -100px
+        .submit-btn
+          width: 100px
+          position: absolute
+          top: 175px
+          right: 145px
+        .btn-play
+          right: -120px
+        .btn-user
+          right: -120px
+          top: 35px
+        .btn-settings
+          right: -120px
+          top: 145px
+        .new-player-input
+          font-family: "Chewy", cursive
+          text-align: center
+          font-size: 60px
+          position: absolute
+          width: 290px
+          top: -10px
+          right: 50px
+          border: none
+          background: transparent
+          color: #fabe19
+          text-shadow: -2px 0 #8f3d1f, 0 2px #8f3d1f, 2px 0 #8f3d1f, 0 -2px #8f3d1f
+          outline: none
+        .settings
+          position: absolute
+          top: -115px
+          right: 15px
+          .trigger-name-mus, .trigger-name-snd, .trigger-name-vib
+            position: absolute
+            top: 60px
+            left: -340px
+            color: #fabe19
+            letter-spacing: 4px
+            text-shadow: -2px 0 #8f3d1f, 0 2px #8f3d1f, 2px 0 #8f3d1f, 0 -2px #8f3d1f
+            font-size: 36px
+          .trigger-holder-mus, .trigger-holder-snd, .trigger-holder-vib
+            width: 75px
+            position: absolute
+            top: 100px
+            left: -100px
+          .trigger-mus, .trigger-snd, .trigger-vib
+            cursor: pointer
+            width: 40px
+            position: absolute
+            top: 98px
+            left: -100px
+          .trigger-name-snd
+            top: 120px
+          .trigger-holder-snd
+            top: 160px
+          .trigger-snd
+            top: 158px
+            left: -63px
+          .trigger-name-vib
+            top: 180px
+          .trigger-holder-vib
+            top: 220px
+          .trigger-vib
+            top: 218px
+
+        .player, .user-player
+          display: flex
+          justify-content: center
+          color: #fabe19
+          letter-spacing: 4px
+          text-shadow: -1px 0 #8f3d1f, 0 1px #8f3d1f, 1px 0 #8f3d1f, 0 -1px #8f3d1f
+          font-size: 28px
+          margin-bottom: 10px
+          .top-player
+            margin-right: 50px
+          .reset-description
+            text-align: center
+        .user-player
+          font-size: 36px
+          margin-top: 20px
 
       .panda-container
         top: 281px
         right: 104px
-        .panda-icon
+        .panda-face
           width: 80px
+          float: right
+          margin-right: 40px
           -webkit-animation-name: shake
           -webkit-animation-duration: 10s
           -webkit-transform-origin: 50% 50%
           -webkit-animation-iteration-count: infinite
           -webkit-animation-timing-function: ease
 
-
-@-webkit-keyframes shake
-  0%
-    transform: translate(2px, 1px) rotate(0deg)
-  10%
-    -webkit-transform: translate(-1px, -2px) rotate(-1deg)
-  20%
-    -webkit-transform: translate(-3px, 0px) rotate(1deg)
-  30%
-    -webkit-transform: translate(0px, 2px) rotate(0deg)
-  40%
-    -webkit-transform: translate(1px, -1px) rotate(1deg)
-  50%
-    -webkit-transform: translate(-1px, 2px) rotate(-1deg)
-  60%
-    -webkit-transform: translate(-3px, 1px) rotate(0deg)
-  70%
-    -webkit-transform: translate(2px, 1px) rotate(-1deg)
-  80%
-    -webkit-transform: translate(-1px, -1px) rotate(1deg)
-  90%
-    -webkit-transform: translate(2px, 2px) rotate(0deg)
-  100%
-    -webkit-transform: translate(2px, 1px) rotate(-1deg)

@@ -1,79 +1,23 @@
-body {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  background-color: #599ed5; }
-@-webkit-keyframes animate_background {
+@-webkit-keyframes animate_bg {
   from {
     background-position: 0 0; }
   to {
     background-position: -1920px 0; } }
-@-moz-keyframes animate_background {
+@-moz-keyframes animate_bg {
   from {
     background-position: 0 0; }
   to {
     background-position: -1920px 0; } }
-@-o-keyframes animate_background {
+@-o-keyframes animate_bg {
   from {
     background-position: 0 0; }
   to {
     background-position: -1920px 0; } }
-@keyframes animate_background {
+@keyframes animate_bg {
   from {
     background-position: 0 0; }
   to {
     background-position: -1920px 0; } }
-#gameScreen {
-  width: 100%;
-  background-size: cover;
-  position: absolute;
-  bottom: 0; }
-
-.container {
-  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(../img/bg.jpg) 0 0 repeat;
-  background-size: cover;
-  -webkit-animation: animate_background 60s linear 0s infinite;
-  -moz-animation: animate_background 60s linear 0s infinite;
-  -o-animation: animate_background 60s linear 0s infinite;
-  animation: animate_background 60s linear 0s infinite; }
-  .container .main-screen {
-    display: flex;
-    height: 100vh;
-    margin: auto; }
-    .container .main-screen .img-container {
-      position: relative;
-      width: 620px;
-      height: 408px;
-      margin: auto; }
-      .container .main-screen .img-container .title-bg {
-        width: 600px;
-        margin: auto; }
-      .container .main-screen .img-container .button-container, .container .main-screen .img-container .panda-container {
-        width: 140px;
-        position: absolute;
-        top: 35px;
-        right: 0; }
-        .container .main-screen .img-container .button-container li, .container .main-screen .img-container .panda-container li {
-          list-style: none; }
-          .container .main-screen .img-container .button-container li .btn, .container .main-screen .img-container .panda-container li .btn {
-            width: 100px; }
-            .container .main-screen .img-container .button-container li .btn:hover, .container .main-screen .img-container .panda-container li .btn:hover {
-              -webkit-animation-name: shake;
-              -webkit-animation-duration: 1s;
-              -webkit-transform-origin: 50% 50%;
-              -webkit-animation-iteration-count: infinite;
-              -webkit-animation-timing-function: ease; }
-      .container .main-screen .img-container .panda-container {
-        top: 281px;
-        right: 104px; }
-        .container .main-screen .img-container .panda-container .panda-icon {
-          width: 80px;
-          -webkit-animation-name: shake;
-          -webkit-animation-duration: 10s;
-          -webkit-transform-origin: 50% 50%;
-          -webkit-animation-iteration-count: infinite;
-          -webkit-animation-timing-function: ease; }
-
 @-webkit-keyframes shake {
   0% {
     transform: translate(2px, 1px) rotate(0deg); }
@@ -97,5 +41,155 @@ body {
     -webkit-transform: translate(2px, 2px) rotate(0deg); }
   100% {
     -webkit-transform: translate(2px, 1px) rotate(-1deg); } }
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background-color: #599ed5;
+  font-family: "Chewy", cursive; }
+
+#gameScreen {
+  width: 100%;
+  background-size: cover;
+  position: absolute;
+  bottom: 0; }
+
+.wrapper {
+  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(../img/bg.jpg) 0 0 repeat;
+  background-size: cover;
+  -webkit-animation: animate_bg 60s linear 0s infinite;
+  -moz-animation: animate_bg 60s linear 0s infinite;
+  -o-animation: animate_bg 60s linear 0s infinite;
+  animation: animate_bg 60s linear 0s infinite; }
+  .wrapper .container {
+    display: flex;
+    height: 100vh;
+    margin: auto; }
+    .wrapper .container .popup-container {
+      position: relative;
+      width: 600px;
+      height: 408px;
+      margin: auto; }
+      .wrapper .container .popup-container .popup-bg {
+        width: 600px;
+        margin: auto; }
+      .wrapper .container .popup-container .button-container, .wrapper .container .popup-container .panda-container {
+        width: 400px;
+        position: absolute;
+        top: 150px;
+        right: 100px; }
+        .wrapper .container .popup-container .button-container li, .wrapper .container .popup-container .panda-container li {
+          list-style: none; }
+          .wrapper .container .popup-container .button-container li .btn, .wrapper .container .popup-container .panda-container li .btn {
+            width: 100px; }
+            .wrapper .container .popup-container .button-container li .btn:hover, .wrapper .container .popup-container .panda-container li .btn:hover {
+              -webkit-animation-name: shake;
+              -webkit-animation-duration: 1s;
+              -webkit-transform-origin: 50% 50%;
+              -webkit-animation-iteration-count: infinite;
+              -webkit-animation-timing-function: ease; }
+        .wrapper .container .popup-container .button-container .cancel-btn, .wrapper .container .popup-container .button-container .cancel-btn-top3, .wrapper .container .popup-container .button-container .submit-btn, .wrapper .container .popup-container .button-container .btn-play, .wrapper .container .popup-container .button-container .btn-user, .wrapper .container .popup-container .button-container .btn-settings, .wrapper .container .popup-container .panda-container .cancel-btn, .wrapper .container .popup-container .panda-container .cancel-btn-top3, .wrapper .container .popup-container .panda-container .submit-btn, .wrapper .container .popup-container .panda-container .btn-play, .wrapper .container .popup-container .panda-container .btn-user, .wrapper .container .popup-container .panda-container .btn-settings {
+          cursor: pointer;
+          position: absolute;
+          width: 50px;
+          right: -80px;
+          top: -75px; }
+          .wrapper .container .popup-container .button-container .cancel-btn:hover, .wrapper .container .popup-container .button-container .cancel-btn-top3:hover, .wrapper .container .popup-container .button-container .submit-btn:hover, .wrapper .container .popup-container .button-container .btn-play:hover, .wrapper .container .popup-container .button-container .btn-user:hover, .wrapper .container .popup-container .button-container .btn-settings:hover, .wrapper .container .popup-container .panda-container .cancel-btn:hover, .wrapper .container .popup-container .panda-container .cancel-btn-top3:hover, .wrapper .container .popup-container .panda-container .submit-btn:hover, .wrapper .container .popup-container .panda-container .btn-play:hover, .wrapper .container .popup-container .panda-container .btn-user:hover, .wrapper .container .popup-container .panda-container .btn-settings:hover {
+            -webkit-animation-name: shake;
+            -webkit-animation-duration: 1s;
+            -webkit-transform-origin: 50% 50%;
+            -webkit-animation-iteration-count: infinite;
+            -webkit-animation-timing-function: ease; }
+        .wrapper .container .popup-container .button-container .cancel-btn, .wrapper .container .popup-container .panda-container .cancel-btn {
+          top: -100px; }
+        .wrapper .container .popup-container .button-container .submit-btn, .wrapper .container .popup-container .panda-container .submit-btn {
+          width: 100px;
+          position: absolute;
+          top: 175px;
+          right: 145px; }
+        .wrapper .container .popup-container .button-container .btn-play, .wrapper .container .popup-container .panda-container .btn-play {
+          right: -120px; }
+        .wrapper .container .popup-container .button-container .btn-user, .wrapper .container .popup-container .panda-container .btn-user {
+          right: -120px;
+          top: 35px; }
+        .wrapper .container .popup-container .button-container .btn-settings, .wrapper .container .popup-container .panda-container .btn-settings {
+          right: -120px;
+          top: 145px; }
+        .wrapper .container .popup-container .button-container .new-player-input, .wrapper .container .popup-container .panda-container .new-player-input {
+          font-family: "Chewy", cursive;
+          text-align: center;
+          font-size: 60px;
+          position: absolute;
+          width: 290px;
+          top: -10px;
+          right: 50px;
+          border: none;
+          background: transparent;
+          color: #fabe19;
+          text-shadow: -2px 0 #8f3d1f, 0 2px #8f3d1f, 2px 0 #8f3d1f, 0 -2px #8f3d1f;
+          outline: none; }
+        .wrapper .container .popup-container .button-container .settings, .wrapper .container .popup-container .panda-container .settings {
+          position: absolute;
+          top: -115px;
+          right: 15px; }
+          .wrapper .container .popup-container .button-container .settings .trigger-name-mus, .wrapper .container .popup-container .button-container .settings .trigger-name-snd, .wrapper .container .popup-container .button-container .settings .trigger-name-vib, .wrapper .container .popup-container .panda-container .settings .trigger-name-mus, .wrapper .container .popup-container .panda-container .settings .trigger-name-snd, .wrapper .container .popup-container .panda-container .settings .trigger-name-vib {
+            position: absolute;
+            top: 60px;
+            left: -340px;
+            color: #fabe19;
+            letter-spacing: 4px;
+            text-shadow: -2px 0 #8f3d1f, 0 2px #8f3d1f, 2px 0 #8f3d1f, 0 -2px #8f3d1f;
+            font-size: 36px; }
+          .wrapper .container .popup-container .button-container .settings .trigger-holder-mus, .wrapper .container .popup-container .button-container .settings .trigger-holder-snd, .wrapper .container .popup-container .button-container .settings .trigger-holder-vib, .wrapper .container .popup-container .panda-container .settings .trigger-holder-mus, .wrapper .container .popup-container .panda-container .settings .trigger-holder-snd, .wrapper .container .popup-container .panda-container .settings .trigger-holder-vib {
+            width: 75px;
+            position: absolute;
+            top: 100px;
+            left: -100px; }
+          .wrapper .container .popup-container .button-container .settings .trigger-mus, .wrapper .container .popup-container .button-container .settings .trigger-snd, .wrapper .container .popup-container .button-container .settings .trigger-vib, .wrapper .container .popup-container .panda-container .settings .trigger-mus, .wrapper .container .popup-container .panda-container .settings .trigger-snd, .wrapper .container .popup-container .panda-container .settings .trigger-vib {
+            cursor: pointer;
+            width: 40px;
+            position: absolute;
+            top: 98px;
+            left: -100px; }
+          .wrapper .container .popup-container .button-container .settings .trigger-name-snd, .wrapper .container .popup-container .panda-container .settings .trigger-name-snd {
+            top: 120px; }
+          .wrapper .container .popup-container .button-container .settings .trigger-holder-snd, .wrapper .container .popup-container .panda-container .settings .trigger-holder-snd {
+            top: 160px; }
+          .wrapper .container .popup-container .button-container .settings .trigger-snd, .wrapper .container .popup-container .panda-container .settings .trigger-snd {
+            top: 158px;
+            left: -63px; }
+          .wrapper .container .popup-container .button-container .settings .trigger-name-vib, .wrapper .container .popup-container .panda-container .settings .trigger-name-vib {
+            top: 180px; }
+          .wrapper .container .popup-container .button-container .settings .trigger-holder-vib, .wrapper .container .popup-container .panda-container .settings .trigger-holder-vib {
+            top: 220px; }
+          .wrapper .container .popup-container .button-container .settings .trigger-vib, .wrapper .container .popup-container .panda-container .settings .trigger-vib {
+            top: 218px; }
+        .wrapper .container .popup-container .button-container .player, .wrapper .container .popup-container .button-container .user-player, .wrapper .container .popup-container .panda-container .player, .wrapper .container .popup-container .panda-container .user-player {
+          display: flex;
+          justify-content: center;
+          color: #fabe19;
+          letter-spacing: 4px;
+          text-shadow: -1px 0 #8f3d1f, 0 1px #8f3d1f, 1px 0 #8f3d1f, 0 -1px #8f3d1f;
+          font-size: 28px;
+          margin-bottom: 10px; }
+          .wrapper .container .popup-container .button-container .player .top-player, .wrapper .container .popup-container .button-container .user-player .top-player, .wrapper .container .popup-container .panda-container .player .top-player, .wrapper .container .popup-container .panda-container .user-player .top-player {
+            margin-right: 50px; }
+          .wrapper .container .popup-container .button-container .player .reset-description, .wrapper .container .popup-container .button-container .user-player .reset-description, .wrapper .container .popup-container .panda-container .player .reset-description, .wrapper .container .popup-container .panda-container .user-player .reset-description {
+            text-align: center; }
+        .wrapper .container .popup-container .button-container .user-player, .wrapper .container .popup-container .panda-container .user-player {
+          font-size: 36px;
+          margin-top: 20px; }
+      .wrapper .container .popup-container .panda-container {
+        top: 281px;
+        right: 104px; }
+        .wrapper .container .popup-container .panda-container .panda-face {
+          width: 80px;
+          float: right;
+          margin-right: 40px;
+          -webkit-animation-name: shake;
+          -webkit-animation-duration: 10s;
+          -webkit-transform-origin: 50% 50%;
+          -webkit-animation-iteration-count: infinite;
+          -webkit-animation-timing-function: ease; }
 
 /*# sourceMappingURL=main.css.map */
