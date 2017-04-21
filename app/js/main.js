@@ -140,6 +140,7 @@ class Game {
      */
     play(canvas){
         let context = canvas.getContext('2d');
+        var collected = 0;
         let coinImage = new Image();
         let coinCounterImage = new Image();
         let bombImage = new Image();
@@ -174,7 +175,9 @@ class Game {
                     context.drawImage(fullHeartImage, 100, 50, fullHeartImage.width / 7, fullHeartImage.height / 7);
                     // context.drawImage(fullHeartImage, 150, 50, fullHeartImage.width / 7, fullHeartImage.height / 7);
 
-                    context.drawImage(coinCounterImage, 850, 50, coinCounterImage.width / 7, coinCounterImage.height / 7);
+                    for (var i = 0; i < collected; ++i) {
+                        context.drawImage(coinCounterImage, 850 + i * coinCounterImage.width / 21, 50, coinCounterImage.width / 7, coinCounterImage.height / 7);
+                    }
 
                     context.drawImage(btnSettingImage, 1770, 150, btnSettingImage.width / 3.5, btnSettingImage.height / 3.5);
                     context.drawImage(btnRestartImage, 1770, 50, btnRestartImage.width / 3.5, btnRestartImage.height / 3.5);
@@ -224,6 +227,7 @@ class Game {
                         coin.update();
                         coin.render();
                         if (coin.collides(game.balloon)) {
+                            ++collected;
                             coins[i] = null;
                             continue;
                         }
