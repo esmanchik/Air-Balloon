@@ -201,15 +201,19 @@ class Game {
             let game = this;
             (function () {
 
-                let coin, coinImage, bomb, bombImage;
+                let coins = []; 
+                let coinImage, bomb, bombImage;
 
                 function gameLoop () {
 
                     window.requestAnimationFrame(gameLoop);
 
-                    coin.update();
-                    if (!coin.collides(game.balloon)) {
-                        coin.render();                    
+                    for(var i = 0; i < coins.length; ++i) {
+                        let coin = coins[i]
+                        coin.update();
+                        if (!coin.collides(game.balloon)) {
+                            coin.render();                    
+                        }                        
                     }
                     bomb.update();
                     bomb.render();
@@ -253,7 +257,7 @@ class Game {
                     that.render = function () {
 
                         // Draw the animation
-                        coin.context.drawImage(that.image,
+                        that.context.drawImage(that.image,
                             frameIndex * that.width / numberOfFrames,
                             0,
                             that.width / numberOfFrames,
@@ -268,9 +272,9 @@ class Game {
                         let radius = that.height / 4;
                         let x = canvas.width - that.offset + radius + radius / 3;
                         let y = that.elevation + radius + radius / 3;
-                        coin.context.beginPath();
-                        coin.context.arc(x, y, radius, radius, Math.PI * 2, true);
-                        coin.context.stroke();
+                        that.context.beginPath();
+                        that.context.arc(x, y, radius, radius, Math.PI * 2, true);
+                        that.context.stroke();
                         let circle = balloon.getCollisionCircle();
                         let dx = x - circle.x;
                         var dy = y - circle.y;
@@ -286,15 +290,20 @@ class Game {
                 bombImage = new Image();
 
                 // Create sprite
-                coin = sprite({
-                    context: canvas.getContext("2d"),
-                    width: 138 * 7,
-                    height: 200,
-                    image: coinImage,
-                    numberOfFrames: 7,
-                    ticksPerFrame: 4,
-                    elevation: 100
-                });
+                for (var i = 0; i < 10; ++i) {
+                    let coin = sprite({
+                        context: canvas.getContext("2d"),
+                        width: 138 * 7,
+                        height: 200,
+                        image: coinImage,
+                        numberOfFrames: 7,
+                        ticksPerFrame: 4,
+                        elevation: Math.random() * canvas.height,
+                        offset: i * canvas.width / 4 + Math.random() * canvas.width
+                    });
+                    coins.push(coin);
+                }
+                
                 bomb = sprite({
                     context: canvas.getContext("2d"),
                     width: 846,
@@ -302,7 +311,7 @@ class Game {
                     image: bombImage,
                     numberOfFrames: 3,
                     ticksPerFrame: 4,
-                    elevation: 200,
+                    elevation:  Math.random() * canvas.height,
                     offset: 500
                 });
 
