@@ -75,6 +75,10 @@ class Balloon {
         let x = this.image.width / scale;
         canvas.drawImage(balloonImage, x, y, 
                          balloonImage.width / scale, height);
+        let circle = this.getCollisionCircle();
+        canvas.beginPath();
+        canvas.arc(circle.x, circle.y, circle.radius, circle.radius, Math.PI * 2, true);
+        canvas.stroke();
         // canvas.fillText(this.temperature, 2 * x, y + height -  height / 5);
         // canvas.fillText(this.heating, 2 * x, y + height - height / 10);
     }
@@ -112,6 +116,17 @@ class Balloon {
      */
     getScale() {
         return 0.5;
+    }
+
+    getCollisionCircle() {
+        let scale = this.getScale();
+        let height = this.image.height / scale;
+        let width = this.image.width / scale;
+        let r = width / 2;
+        let cy = this.canvas.height - height - this.altitude + r;
+        return {
+            x: width + r, y: cy, radius: r
+        }
     }
 }
 
@@ -182,6 +197,8 @@ class Game {
             btnRestartImage.src = 'img/settings-gamescreen.png';
             btnControllImage.src = 'img/up-btn-gamescreen.png';
 
+
+            let game = this;
             (function () {
 
                 let coin, coinImage, bomb, bombImage;
@@ -191,9 +208,12 @@ class Game {
                     window.requestAnimationFrame(gameLoop);
 
                     coin.update();
-                    coin.render();
+                    if (!coin.collides(game.balloon)) {
+                        coin.render();                    
+                    }
                     bomb.update();
                     bomb.render();
+                    
                 }
 
                 function sprite (options) {
@@ -243,6 +263,20 @@ class Game {
                             that.width / numberOfFrames,
                             that.height);
                     };
+
+                    that.collides = (balloon) => {
+                        let radius = that.height / 4;
+                        let x = canvas.width - that.offset + radius + radius / 3;
+                        let y = that.elevation + radius + radius / 3;
+                        coin.context.beginPath();
+                        coin.context.arc(x, y, radius, radius, Math.PI * 2, true);
+                        coin.context.stroke();
+                        let circle = balloon.getCollisionCircle();
+                        let dx = x - circle.x;
+                        var dy = y - circle.y;
+                        var distance = Math.sqrt(dx * dx + dy * dy);
+                        return distance < radius + circle.radius;
+                    }
 
                     return that;
                 }
