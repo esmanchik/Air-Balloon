@@ -126,7 +126,14 @@ class Game {
     play(canvas){
         let context = canvas.getContext('2d');
         let coinImage = new Image();
+        let coinCounterImage = new Image();
+        let bombImage = new Image();
+        let emptyHeartImage = new Image();
+        let fullHeartImage = new Image();
         let balloonImage = new Image();
+        let btnSettingImage = new Image();
+        let btnRestartImage = new Image();
+        let btnControllImage = new Image();
         let backgroundImage = new Image();
         backgroundImage.addEventListener('load', () => {
             canvas.width = backgroundImage.naturalWidth;
@@ -143,16 +150,49 @@ class Game {
                     // draw
                     background.draw(context);
                     this.balloon.draw(context);
+
+                    context.drawImage(emptyHeartImage, 50, 50, emptyHeartImage.width / 7, emptyHeartImage.height / 7);
+                    context.drawImage(emptyHeartImage, 100, 50, emptyHeartImage.width / 7, emptyHeartImage.height / 7);
+                    context.drawImage(emptyHeartImage, 150, 50, emptyHeartImage.width / 7, emptyHeartImage.height / 7);
+
+                    context.drawImage(fullHeartImage, 50, 50, fullHeartImage.width / 7, fullHeartImage.height / 7);
+                    context.drawImage(fullHeartImage, 100, 50, fullHeartImage.width / 7, fullHeartImage.height / 7);
+                    // context.drawImage(fullHeartImage, 150, 50, fullHeartImage.width / 7, fullHeartImage.height / 7);
+
+                    context.drawImage(coinCounterImage, 850, 50, coinCounterImage.width / 7, coinCounterImage.height / 7);
+
+                    context.drawImage(btnSettingImage, 1770, 150, btnSettingImage.width / 3.5, btnSettingImage.height / 3.5);
+                    context.drawImage(btnRestartImage, 1770, 50, btnRestartImage.width / 3.5, btnRestartImage.height / 3.5);
+                    context.drawImage(btnControllImage, 1600, 800, btnControllImage.width / 2, btnControllImage.height / 2);
+
                     context.drawImage(coinImage, 500, 500, coinImage.width / 5, coinImage.height / 5);
                     context.drawImage(coinImage, 600, 600, coinImage.width / 5, coinImage.height / 5);
                     context.drawImage(coinImage, 700, 500, coinImage.width / 5, coinImage.height / 5);
                     context.drawImage(coinImage, 800, 600, coinImage.width / 5, coinImage.height / 5);
-                    context.drawImage(coinImage, 900, 500, coinImage.width / 5, coinImage.height / 5);
+                    context.drawImage(bombImage, 900, 470, bombImage.width / 4.5, bombImage.height / 4.5);
+
+                    context.drawImage(coinImage, 1100, 250, coinImage.width / 5, coinImage.height / 5);
+                    context.drawImage(coinImage, 1200, 350, coinImage.width / 5, coinImage.height / 5);
+                    context.drawImage(bombImage, 1300, 220, bombImage.width / 4.5, bombImage.height / 4.5);
+                    context.drawImage(coinImage, 1500, 250, coinImage.width / 5, coinImage.height / 5);
+
                 };
                 window.setInterval(gameLoop, 1000 / 60);
             }, false);
             balloonImage.src = 'img/balloon.svg';
+
             coinImage.src = 'img/coin.png';
+            coinCounterImage.src = 'img/coin-for-count.png';
+
+            bombImage.src = 'img/bomb.png';
+
+            emptyHeartImage.src = 'img/empty-heart.png';
+            fullHeartImage.src = 'img/heart.png';
+
+            btnSettingImage.src = 'img/restart-gamescreen.png';
+            btnRestartImage.src = 'img/settings-gamescreen.png';
+            btnControllImage.src = 'img/up-btn-gamescreen.png';
+
         }, false);
         backgroundImage.src = 'img/bg.jpg';
     }
