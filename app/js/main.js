@@ -251,8 +251,8 @@ class Game {
                 // Create sprite
                 coin = sprite({
                     context: canvas.getContext("2d"),
-                    width: 715,
-                    height: 100,
+                    width: 138 * 7,
+                    height: 200,
                     image: coinImage,
                     numberOfFrames: 7,
                     ticksPerFrame: 4
