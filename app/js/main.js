@@ -165,17 +165,6 @@ class Game {
                     context.drawImage(btnRestartImage, 1770, 50, btnRestartImage.width / 3.5, btnRestartImage.height / 3.5);
                     context.drawImage(btnControllImage, 1600, 800, btnControllImage.width / 2, btnControllImage.height / 2);
 
-                    context.drawImage(coinImage, 500, 500, coinImage.width / 5, coinImage.height / 5);
-                    context.drawImage(coinImage, 600, 600, coinImage.width / 5, coinImage.height / 5);
-                    context.drawImage(coinImage, 700, 500, coinImage.width / 5, coinImage.height / 5);
-                    context.drawImage(coinImage, 800, 600, coinImage.width / 5, coinImage.height / 5);
-                    context.drawImage(bombImage, 900, 470, bombImage.width / 4.5, bombImage.height / 4.5);
-
-                    context.drawImage(coinImage, 1100, 250, coinImage.width / 5, coinImage.height / 5);
-                    context.drawImage(coinImage, 1200, 350, coinImage.width / 5, coinImage.height / 5);
-                    context.drawImage(bombImage, 1300, 220, bombImage.width / 4.5, bombImage.height / 4.5);
-                    context.drawImage(coinImage, 1500, 250, coinImage.width / 5, coinImage.height / 5);
-
                 };
                 window.setInterval(gameLoop, 1000 / 60);
             }, false);
@@ -193,6 +182,97 @@ class Game {
             btnRestartImage.src = 'img/settings-gamescreen.png';
             btnControllImage.src = 'img/up-btn-gamescreen.png';
 
+            (function () {
+
+                let coin, coinImage, bomb, bombImage;
+
+                function gameLoop () {
+
+                    window.requestAnimationFrame(gameLoop);
+
+                    coin.update();
+                    coin.render();
+                    bomb.update();
+                    bomb.render();
+                }
+
+                function sprite (options) {
+
+                    let that = {},
+                        frameIndex = 0,
+                        tickCount = 0,
+                        ticksPerFrame = options.ticksPerFrame || 0,
+                        numberOfFrames = options.numberOfFrames || 1;
+
+                    that.context = options.context;
+                    that.width = options.width;
+                    that.height = options.height;
+                    that.image = options.image;
+
+                    that.update = function () {
+
+                        tickCount += 1;
+
+                        if (tickCount > ticksPerFrame) {
+
+                            tickCount = 0;
+
+                            // If the current frame index is in range
+                            if (frameIndex < numberOfFrames - 1) {
+                                // Go to the next frame
+                                frameIndex += 1;
+                            } else {
+                                frameIndex = 0;
+                            }
+                        }
+                    };
+
+                    that.render = function () {
+
+                        // Draw the animation
+                        coin.context.drawImage(that.image,
+                            frameIndex * that.width / numberOfFrames,
+                            0,
+                            that.width / numberOfFrames,
+                            that.height,
+                            500,
+                            500,
+                            that.width / numberOfFrames,
+                            that.height);
+                    };
+
+                    return that;
+                }
+
+                // Create sprite sheet
+                coinImage = new Image();
+                bombImage = new Image();
+
+                // Create sprite
+                coin = sprite({
+                    context: canvas.getContext("2d"),
+                    width: 715,
+                    height: 100,
+                    image: coinImage,
+                    numberOfFrames: 7,
+                    ticksPerFrame: 4
+                });
+                bomb = sprite({
+                    context: canvas.getContext("2d"),
+                    width: 846,
+                    height: 304,
+                    image: bombImage,
+                    numberOfFrames: 3,
+                    ticksPerFrame: 4
+                });
+
+                // Load sprite sheet
+                coinImage.addEventListener("load", gameLoop);
+                coinImage.src = "img/coin_sprite.png";
+                bombImage.addEventListener("load", gameLoop);
+                bombImage.src = "img/bomb_sprite.png";
+
+            } ());
         }, false);
         backgroundImage.src = 'img/bg.jpg';
     }
