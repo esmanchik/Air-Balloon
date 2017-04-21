@@ -203,24 +203,54 @@ class Game {
 
                 let coins = []; 
                 let coinImage, bomb, bombImage;
+                var iteration = 0;
 
                 function gameLoop () {
 
                     window.requestAnimationFrame(gameLoop);
 
+                    var trim = 0;
                     for(var i = 0; i < coins.length; ++i) {
                         let coin = coins[i];
-                        if (!coin) continue;
+                        if (coin) break;
+                        ++trim;
+                    }
+                    if (trim > 0) coins = coins.slice(trim);
+                    for(var i = 0; i < coins.length; ++i) {
+                        let coin = coins[i];
+                        if (!coin) {
+                            continue;
+                        }
                         coin.update();
                         coin.render();
                         if (coin.collides(game.balloon)) {
                             coins[i] = null;
                             continue;
                         }
+                        if (coin.offset > canvas.width + coin.width) {
+                            coins[i] = null;
+                            continue;
+                        }
                     }
                     bomb.update();
                     bomb.render();
-                    
+
+
+                    if (iteration % 500 === 0) {
+                        let coin = sprite({
+                            context: canvas.getContext("2d"),
+                            width: 138 * 7,
+                            height: 200,
+                            image: coinImage,
+                            numberOfFrames: 7,
+                            ticksPerFrame: 4,
+                            elevation: Math.random() * canvas.height,
+                            offset: Math.random() * canvas.width - canvas.width
+                        });
+                        coins.push(coin);     
+                    }
+
+                    ++iteration;
                 }
 
                 function sprite (options) {
@@ -294,17 +324,6 @@ class Game {
 
                 // Create sprite
                 for (var i = 0; i < 10; ++i) {
-                    let coin = sprite({
-                        context: canvas.getContext("2d"),
-                        width: 138 * 7,
-                        height: 200,
-                        image: coinImage,
-                        numberOfFrames: 7,
-                        ticksPerFrame: 4,
-                        elevation: Math.random() * canvas.height,
-                        offset: i * canvas.width / 4 + Math.random() * canvas.width
-                    });
-                    coins.push(coin);
                 }
                 
                 bomb = sprite({
