@@ -140,7 +140,7 @@ class Game {
      */
     play(canvas){
         let context = canvas.getContext('2d');
-        var collected = 0;
+        let collected = 0;
         let coinImage = new Image();
         let coinCounterImage = new Image();
         let bombImage = new Image();
@@ -175,8 +175,8 @@ class Game {
                     context.drawImage(fullHeartImage, 100, 50, fullHeartImage.width / 7, fullHeartImage.height / 7);
                     // context.drawImage(fullHeartImage, 150, 50, fullHeartImage.width / 7, fullHeartImage.height / 7);
 
-                    for (var i = 0; i < collected; ++i) {
-                        context.drawImage(coinCounterImage, 850 + i * coinCounterImage.width / 21, 50, coinCounterImage.width / 7, coinCounterImage.height / 7);
+                    for (let i = 0; i < collected; ++i) {
+                        context.drawImage(coinCounterImage, 400 + i * coinCounterImage.width / 21, 50, coinCounterImage.width / 7, coinCounterImage.height / 7);
                     }
 
                     context.drawImage(btnSettingImage, 1770, 150, btnSettingImage.width / 3.5, btnSettingImage.height / 3.5);
@@ -204,22 +204,23 @@ class Game {
             let game = this;
             (function () {
 
-                let coins = []; 
-                let coinImage, bomb, bombImage;
-                var iteration = 0;
+                let coins = [], bombs = [];
+                let coinImage, bombImage;
+                let iteration = 0;
 
                 function gameLoop () {
 
                     window.requestAnimationFrame(gameLoop);
 
-                    var trim = 0;
-                    for(var i = 0; i < coins.length; ++i) {
+                    let trim = 0;
+                    for(let i = 0; i < coins.length; ++i) {
                         let coin = coins[i];
                         if (coin) break;
                         ++trim;
                     }
+
                     if (trim > 0) coins = coins.slice(trim);
-                    for(var i = 0; i < coins.length; ++i) {
+                    for(let i = 0; i < coins.length; ++i) {
                         let coin = coins[i];
                         if (!coin) {
                             continue;
@@ -233,28 +234,53 @@ class Game {
                         }
                         if (coin.offset > canvas.width + coin.width) {
                             coins[i] = null;
-                            continue;
                         }
                     }
-                    bomb.update();
-                    bomb.render();
-
 
                     if (iteration % 500 === 0) {
                         let coin = sprite({
                             context: canvas.getContext("2d"),
-                            width: 138 * 7,
+                            width: 102 * 7,
                             height: 200,
                             image: coinImage,
                             numberOfFrames: 7,
                             ticksPerFrame: 4,
-                            elevation: Math.random() * canvas.height,
+                            elevation: Math.random() * canvas.height / 1.5,
                             offset: Math.random() * canvas.width - canvas.width
                         });
-                        coins.push(coin);     
+                        coins.push(coin);
                     }
 
-                    ++iteration;
+                    let trimBombs = 0;
+                    for(let i = 0; i <bombs.length; ++i) {
+                        let bomb = bombs[i];
+                        if (bomb) break;
+                        ++trim;
+                    }
+                    if (trimBombs > 0) bombs = bombs.slice(trimBombs);
+                    for(let i = 0; i < bombs.length; ++i) {
+                        let bomb = bombs[i];
+                        if (!bomb) {
+                            continue;
+                        }
+                        bomb.update();
+                        bomb.render();
+
+                    }
+                    if (iteration % 500 === 0) {
+                        let bomb = sprite({
+                            context: canvas.getContext("2d"),
+                            width: 846,
+                            height: 304,
+                            image: bombImage,
+                            numberOfFrames: 3,
+                            ticksPerFrame: 4,
+                            elevation: Math.random() * canvas.height / 1.5,
+                            offset: Math.random() * canvas.width - canvas.width
+                        });
+                        bombs.push(bomb);
+                    }
+                        ++iteration;
                 }
 
                 function sprite (options) {
@@ -314,10 +340,10 @@ class Game {
                         //that.context.stroke();
                         let circle = balloon.getCollisionCircle();
                         let dx = x - circle.x;
-                        var dy = y - circle.y;
-                        var distance = Math.sqrt(dx * dx + dy * dy);
+                        let dy = y - circle.y;
+                        let distance = Math.sqrt(dx * dx + dy * dy);
                         return distance < radius + circle.radius;
-                    }
+                    };
 
                     return that;
                 }
@@ -325,21 +351,6 @@ class Game {
                 // Create sprite sheet
                 coinImage = new Image();
                 bombImage = new Image();
-
-                // Create sprite
-                for (var i = 0; i < 10; ++i) {
-                }
-                
-                bomb = sprite({
-                    context: canvas.getContext("2d"),
-                    width: 846,
-                    height: 304,
-                    image: bombImage,
-                    numberOfFrames: 3,
-                    ticksPerFrame: 4,
-                    elevation:  Math.random() * canvas.height,
-                    offset: 500
-                });
 
                 // Load sprite sheet
                 coinImage.addEventListener("load", gameLoop);
