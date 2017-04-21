@@ -209,11 +209,14 @@ class Game {
                     window.requestAnimationFrame(gameLoop);
 
                     for(var i = 0; i < coins.length; ++i) {
-                        let coin = coins[i]
+                        let coin = coins[i];
+                        if (!coin) continue;
                         coin.update();
-                        if (!coin.collides(game.balloon)) {
-                            coin.render();                    
-                        }                        
+                        coin.render();
+                        if (coin.collides(game.balloon)) {
+                            coins[i] = null;
+                            continue;
+                        }
                     }
                     bomb.update();
                     bomb.render();
