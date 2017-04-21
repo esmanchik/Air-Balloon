@@ -75,6 +75,10 @@ class Balloon {
         let x = this.image.width / scale;
         canvas.drawImage(balloonImage, x, y, 
                          balloonImage.width / scale, height);
+        let circle = this.getCollisionCircle();
+        //canvas.beginPath();
+        //canvas.arc(circle.x, circle.y, circle.radius, circle.radius, Math.PI * 2, true);
+        //canvas.stroke();
         // canvas.fillText(this.temperature, 2 * x, y + height -  height / 5);
         // canvas.fillText(this.heating, 2 * x, y + height - height / 10);
     }
@@ -113,6 +117,17 @@ class Balloon {
     getScale() {
         return 0.5;
     }
+
+    getCollisionCircle() {
+        let scale = this.getScale();
+        let height = this.image.height / scale;
+        let width = this.image.width / scale;
+        let r = width / 2;
+        let cy = this.canvas.height - height - this.altitude + r;
+        return {
+            x: width + r, y: cy, radius: r
+        }
+    }
 }
 
 
@@ -125,6 +140,7 @@ class Game {
      */
     play(canvas){
         let context = canvas.getContext('2d');
+        var collected = 0;
         let coinImage = new Image();
         let coinCounterImage = new Image();
         let bombImage = new Image();
@@ -159,7 +175,9 @@ class Game {
                     context.drawImage(fullHeartImage, 100, 50, fullHeartImage.width / 7, fullHeartImage.height / 7);
                     // context.drawImage(fullHeartImage, 150, 50, fullHeartImage.width / 7, fullHeartImage.height / 7);
 
-                    context.drawImage(coinCounterImage, 850, 50, coinCounterImage.width / 7, coinCounterImage.height / 7);
+                    for (var i = 0; i < collected; ++i) {
+                        context.drawImage(coinCounterImage, 850 + i * coinCounterImage.width / 21, 50, coinCounterImage.width / 7, coinCounterImage.height / 7);
+                    }
 
                     context.drawImage(btnSettingImage, 1770, 150, btnSettingImage.width / 3.5, btnSettingImage.height / 3.5);
                     context.drawImage(btnRestartImage, 1770, 50, btnRestartImage.width / 3.5, btnRestartImage.height / 3.5);
@@ -182,18 +200,61 @@ class Game {
             btnRestartImage.src = 'img/settings-gamescreen.png';
             btnControllImage.src = 'img/up-btn-gamescreen.png';
 
+
+            let game = this;
             (function () {
 
-                let coin, coinImage, bomb, bombImage;
+                let coins = []; 
+                let coinImage, bomb, bombImage;
+                var iteration = 0;
 
                 function gameLoop () {
 
                     window.requestAnimationFrame(gameLoop);
 
-                    coin.update();
-                    coin.render();
+                    var trim = 0;
+                    for(var i = 0; i < coins.length; ++i) {
+                        let coin = coins[i];
+                        if (coin) break;
+                        ++trim;
+                    }
+                    if (trim > 0) coins = coins.slice(trim);
+                    for(var i = 0; i < coins.length; ++i) {
+                        let coin = coins[i];
+                        if (!coin) {
+                            continue;
+                        }
+                        coin.update();
+                        coin.render();
+                        if (coin.collides(game.balloon)) {
+                            ++collected;
+                            coins[i] = null;
+                            continue;
+                        }
+                        if (coin.offset > canvas.width + coin.width) {
+                            coins[i] = null;
+                            continue;
+                        }
+                    }
                     bomb.update();
                     bomb.render();
+
+
+                    if (iteration % 500 === 0) {
+                        let coin = sprite({
+                            context: canvas.getContext("2d"),
+                            width: 138 * 7,
+                            height: 200,
+                            image: coinImage,
+                            numberOfFrames: 7,
+                            ticksPerFrame: 4,
+                            elevation: Math.random() * canvas.height,
+                            offset: Math.random() * canvas.width - canvas.width
+                        });
+                        coins.push(coin);     
+                    }
+
+                    ++iteration;
                 }
 
                 function sprite (options) {
@@ -208,6 +269,8 @@ class Game {
                     that.width = options.width;
                     that.height = options.height;
                     that.image = options.image;
+                    that.elevation = options.elevation;
+                    that.offset = options.offset || 0;
 
                     that.update = function () {
 
@@ -225,21 +288,36 @@ class Game {
                                 frameIndex = 0;
                             }
                         }
+                        that.offset += 1;
                     };
 
                     that.render = function () {
 
                         // Draw the animation
-                        coin.context.drawImage(that.image,
+                        that.context.drawImage(that.image,
                             frameIndex * that.width / numberOfFrames,
                             0,
                             that.width / numberOfFrames,
                             that.height,
-                            500,
-                            500,
+                            canvas.width - that.offset,
+                            that.elevation,
                             that.width / numberOfFrames,
                             that.height);
                     };
+
+                    that.collides = (balloon) => {
+                        let radius = that.height / 4;
+                        let x = canvas.width - that.offset + radius + radius / 3;
+                        let y = that.elevation + radius + radius / 3;
+                        //that.context.beginPath();
+                        //that.context.arc(x, y, radius, radius, Math.PI * 2, true);
+                        //that.context.stroke();
+                        let circle = balloon.getCollisionCircle();
+                        let dx = x - circle.x;
+                        var dy = y - circle.y;
+                        var distance = Math.sqrt(dx * dx + dy * dy);
+                        return distance < radius + circle.radius;
+                    }
 
                     return that;
                 }
@@ -249,21 +327,18 @@ class Game {
                 bombImage = new Image();
 
                 // Create sprite
-                coin = sprite({
-                    context: canvas.getContext("2d"),
-                    width: 715,
-                    height: 100,
-                    image: coinImage,
-                    numberOfFrames: 7,
-                    ticksPerFrame: 4
-                });
+                for (var i = 0; i < 10; ++i) {
+                }
+                
                 bomb = sprite({
                     context: canvas.getContext("2d"),
                     width: 846,
                     height: 304,
                     image: bombImage,
                     numberOfFrames: 3,
-                    ticksPerFrame: 4
+                    ticksPerFrame: 4,
+                    elevation:  Math.random() * canvas.height,
+                    offset: 500
                 });
 
                 // Load sprite sheet
