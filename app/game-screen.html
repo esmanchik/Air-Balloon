@@ -12,12 +12,22 @@
     </script>
 </head>
 <body>
-    <canvas id="gameScreen" onmousedown="game.balloon.heating += 0.1;"></canvas>
+    <canvas id="gameScreen"></canvas>
     <audio src="audio/Hunter.mp3" autoplay loop></audio>
+
 
     <script>
         let canvas = document.getElementById('gameScreen');
         game.play(canvas);
     </script>
+    <script>
+        window.addEventListener('keydown',this.heatBalloon,false);
+        function heatBalloon(e) {
+            var code = e.keyCode;
+            if (code == 38)
+                game.balloon.heating += 0.1;
+        }
+    </script>
 </body>
 </html>
+
