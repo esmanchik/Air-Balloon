@@ -76,9 +76,9 @@ class Balloon {
         canvas.drawImage(balloonImage, x, y, 
                          balloonImage.width / scale, height);
         let circle = this.getCollisionCircle();
-        canvas.beginPath();
-        canvas.arc(circle.x, circle.y, circle.radius, circle.radius, Math.PI * 2, true);
-        canvas.stroke();
+        //canvas.beginPath();
+        //canvas.arc(circle.x, circle.y, circle.radius, circle.radius, Math.PI * 2, true);
+        //canvas.stroke();
         // canvas.fillText(this.temperature, 2 * x, y + height -  height / 5);
         // canvas.fillText(this.heating, 2 * x, y + height - height / 10);
     }
@@ -305,9 +305,9 @@ class Game {
                         let radius = that.height / 4;
                         let x = canvas.width - that.offset + radius + radius / 3;
                         let y = that.elevation + radius + radius / 3;
-                        that.context.beginPath();
-                        that.context.arc(x, y, radius, radius, Math.PI * 2, true);
-                        that.context.stroke();
+                        //that.context.beginPath();
+                        //that.context.arc(x, y, radius, radius, Math.PI * 2, true);
+                        //that.context.stroke();
                         let circle = balloon.getCollisionCircle();
                         let dx = x - circle.x;
                         var dy = y - circle.y;
