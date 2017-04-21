@@ -208,6 +208,8 @@ class Game {
                     that.width = options.width;
                     that.height = options.height;
                     that.image = options.image;
+                    that.elevation = options.elevation;
+                    that.offset = options.offset || 0;
 
                     that.update = function () {
 
@@ -225,6 +227,7 @@ class Game {
                                 frameIndex = 0;
                             }
                         }
+                        that.offset += 1;
                     };
 
                     that.render = function () {
@@ -235,8 +238,8 @@ class Game {
                             0,
                             that.width / numberOfFrames,
                             that.height,
-                            500,
-                            500,
+                            canvas.width - that.offset,
+                            that.elevation,
                             that.width / numberOfFrames,
                             that.height);
                     };
@@ -255,7 +258,8 @@ class Game {
                     height: 200,
                     image: coinImage,
                     numberOfFrames: 7,
-                    ticksPerFrame: 4
+                    ticksPerFrame: 4,
+                    elevation: 100
                 });
                 bomb = sprite({
                     context: canvas.getContext("2d"),
@@ -263,7 +267,9 @@ class Game {
                     height: 304,
                     image: bombImage,
                     numberOfFrames: 3,
-                    ticksPerFrame: 4
+                    ticksPerFrame: 4,
+                    elevation: 200,
+                    offset: 500
                 });
 
                 // Load sprite sheet
