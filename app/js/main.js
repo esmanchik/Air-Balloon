@@ -240,8 +240,8 @@ class Game {
                     if (iteration % 500 === 0) {
                         let coin = sprite({
                             context: canvas.getContext("2d"),
-                            width: 102 * 7,
-                            height: 200,
+                            width: 973,
+                            height: 176,
                             image: coinImage,
                             numberOfFrames: 7,
                             ticksPerFrame: 4,
