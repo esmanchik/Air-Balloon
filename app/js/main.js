@@ -76,9 +76,9 @@ class Balloon {
         canvas.drawImage(balloonImage, x, y, 
                          balloonImage.width / scale, height);
         let circle = this.getCollisionCircle();
-        //canvas.beginPath();
-        //canvas.arc(circle.x, circle.y, circle.radius, circle.radius, Math.PI * 2, true);
-        //canvas.stroke();
+//        canvas.beginPath();
+//        canvas.arc(circle.x, circle.y, circle.radius, circle.radius, Math.PI * 2, true);
+//        canvas.stroke();
         // canvas.fillText(this.temperature, 2 * x, y + height -  height / 5);
         // canvas.fillText(this.heating, 2 * x, y + height - height / 10);
     }
@@ -140,7 +140,8 @@ class Game {
      */
     play(canvas){
         let context = canvas.getContext('2d');
-        let collected = 0;
+        var collected = 0;
+        var lifes = 3;
         let coinImage = new Image();
         let coinCounterImage = new Image();
         let bombImage = new Image();
@@ -160,7 +161,7 @@ class Game {
                 let moving = true;
                 let gameLoop = () => {
                     // update
-                    moving = this.balloon.altitude > 0;
+                    moving = this.balloon.altitude > 0 && lifes > 0;
                     background.update(moving);
                     this.balloon.update();
                     // draw
@@ -171,8 +172,10 @@ class Game {
                     context.drawImage(emptyHeartImage, 100, 50, emptyHeartImage.width / 7, emptyHeartImage.height / 7);
                     context.drawImage(emptyHeartImage, 150, 50, emptyHeartImage.width / 7, emptyHeartImage.height / 7);
 
-                    context.drawImage(fullHeartImage, 50, 50, fullHeartImage.width / 7, fullHeartImage.height / 7);
-                    context.drawImage(fullHeartImage, 100, 50, fullHeartImage.width / 7, fullHeartImage.height / 7);
+                    for (var i = 1; i <= lifes; ++i) {
+                        context.drawImage(fullHeartImage, i*50, 50, fullHeartImage.width / 7, fullHeartImage.height / 7);
+                    }
+                    //context.drawImage(fullHeartImage, 100, 50, fullHeartImage.width / 7, fullHeartImage.height / 7);
                     // context.drawImage(fullHeartImage, 150, 50, fullHeartImage.width / 7, fullHeartImage.height / 7);
 
                     for (let i = 0; i < collected; ++i) {
@@ -240,8 +243,8 @@ class Game {
                     if (iteration % 500 === 0) {
                         let coin = sprite({
                             context: canvas.getContext("2d"),
-                            width: 102 * 7,
-                            height: 200,
+                            width: 973,
+                            height: 176,
                             image: coinImage,
                             numberOfFrames: 7,
                             ticksPerFrame: 4,
@@ -263,9 +266,13 @@ class Game {
                         if (!bomb) {
                             continue;
                         }
+                        if (bomb.collides(game.balloon)) {
+                            bombs[i] = null;
+                            --lifes;
+                            continue;
+                        }
                         bomb.update();
                         bomb.render();
-
                     }
                     if (iteration % 500 === 0) {
                         let bomb = sprite({
@@ -333,11 +340,11 @@ class Game {
 
                     that.collides = (balloon) => {
                         let radius = that.height / 4;
-                        let x = canvas.width - that.offset + radius + radius / 3;
-                        let y = that.elevation + radius + radius / 3;
-                        //that.context.beginPath();
-                        //that.context.arc(x, y, radius, radius, Math.PI * 2, true);
-                        //that.context.stroke();
+                        let x = canvas.width - that.offset + radius + radius / 1.5;
+                        let y = that.elevation + radius + radius / 1.5;
+//                        that.context.beginPath();
+//                        that.context.arc(x, y, radius, radius, Math.PI * 2, true);
+//                        that.context.stroke();
                         let circle = balloon.getCollisionCircle();
                         let dx = x - circle.x;
                         let dy = y - circle.y;
