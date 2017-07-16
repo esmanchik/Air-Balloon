@@ -283,14 +283,14 @@ class Bombs {
     }    
 
     update(state) {
-        let trimBombs = 0;
+        let trim = 0;
         let bombs = this.items;
         for(let i = 0; i <bombs.length; ++i) {
             let bomb = bombs[i];
             if (bomb) break;
             ++trim;
         }
-        if (trimBombs > 0) bombs = bombs.slice(trimBombs);
+        if (trim > 0) bombs = bombs.slice(trim);
         for(let i = 0; i < bombs.length; ++i) {
             let bomb = bombs[i];
             if (!bomb) {
