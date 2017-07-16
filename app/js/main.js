@@ -63,6 +63,11 @@ class Balloon {
         this.temperature = 2;
         this.heating = 0.01;
         this.cooling = 0.02;
+        this.lifes = 3;
+    }
+
+    alive() {
+        return this.lifes > 0;
     }
 
     /**
@@ -298,7 +303,7 @@ class Bombs {
             }
             if (bomb.collides(state.balloon)) {
                 bombs[i] = null;
-                --state.lifes;
+                --state.balloon.lifes;
                 continue;
             }
             bomb.update(state);
@@ -396,13 +401,13 @@ class Game {
             let btnSettingImage = images.get(++imid);
             let btnRestartImage = images.get(++imid);
 
-            this.lifes = 3;
+            this.balloon.lifes = 3;
             this.collected = 0;
             this.moving = true;
             this.speed = 1;
             let gameLoop = () => {
                 // update
-                this.moving = this.balloon.altitude > 0 && this.lifes > 0;
+                this.moving = this.balloon.altitude > 0 && this.balloon.alive();
                 background.update(this);
                 this.balloon.update();
                 this.coins.update(this);
@@ -417,7 +422,7 @@ class Game {
                 context.drawImage(emptyHeartImage, 100, 50, emptyHeartImage.width / 7, emptyHeartImage.height / 7);
                 context.drawImage(emptyHeartImage, 150, 50, emptyHeartImage.width / 7, emptyHeartImage.height / 7);
 
-                for (var i = 1; i <= this.lifes; ++i) {
+                for (var i = 1; i <= this.balloon.lifes; ++i) {
                     context.drawImage(fullHeartImage, i*50, 50, fullHeartImage.width / 7, fullHeartImage.height / 7);
                 }
                 //context.drawImage(fullHeartImage, 100, 50, fullHeartImage.width / 7, fullHeartImage.height / 7);

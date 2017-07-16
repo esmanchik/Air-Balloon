@@ -23,7 +23,7 @@
         window.addEventListener('keydown',this.heatBalloon,false);
         function heatBalloon(e) {
             var code = e.keyCode;
-            if (code == 38)
+            if (code == 38 && game.balloon.alive())
                 game.balloon.heating += 0.1;
         }
     </script>
