@@ -33,9 +33,10 @@ class Background {
     /**
      *
      */
-    update(moving){
-        if (!moving) return;
-        this.offset += this.canvas.width / 1000.0;
+    update(state){
+        if (!state.moving) return;
+        state.speed = this.canvas.width / 1000.0
+        this.offset += state.speed;
         let scaledWidth = this.image.width / this.getScale();
         while (scaledWidth < this.offset) {
             this.offset -= scaledWidth;
@@ -130,243 +131,309 @@ class Balloon {
     }
 }
 
+function sprite (options) {
 
-class Game {    
+    let that = {},
+        frameIndex = 0,
+        tickCount = 0,
+        ticksPerFrame = options.ticksPerFrame || 0,
+        numberOfFrames = options.numberOfFrames || 1;
+
+    that.context = options.context;
+    that.width = options.width;
+    that.height = options.height;
+    that.image = options.image;
+    that.elevation = options.elevation;
+    that.offset = options.offset || 0;
+
+    that.update = function (state) {
+
+        tickCount += 1;
+
+        if (tickCount > ticksPerFrame) {
+
+            tickCount = 0;
+
+            // If the current frame index is in range
+            if (frameIndex < numberOfFrames - 1) {
+                // Go to the next frame
+                frameIndex += 1;
+            } else {
+                frameIndex = 0;
+            }
+        }
+        if (state.moving) {
+            that.offset += state.speed;
+        }
+    };
+
+    that.render = function () {
+
+        // Draw the animation
+        that.context.drawImage(that.image,
+            frameIndex * that.width / numberOfFrames,
+            0,
+            that.width / numberOfFrames,
+            that.height,
+            canvas.width - that.offset,
+            that.elevation,
+            that.width / numberOfFrames,
+            that.height);
+    };
+
+    that.collides = (balloon) => {
+        let radius = that.height / 4;
+        let x = canvas.width - that.offset + radius + radius / 1.5;
+        let y = that.elevation + radius + radius / 1.5;
+//                        that.context.beginPath();
+//                        that.context.arc(x, y, radius, radius, Math.PI * 2, true);
+//                        that.context.stroke();
+        let circle = balloon.getCollisionCircle();
+        let dx = x - circle.x;
+        let dy = y - circle.y;
+        let distance = Math.sqrt(dx * dx + dy * dy);
+        return distance < radius + circle.radius;
+    };
+
+    return that;
+}
+
+class Coins {
+    constructor(canvas, image) {
+        this.canvas = canvas;
+        this.image = image;
+        this.coins = [];
+        this.collected = 0;
+        this.iteration = 0;
+    }
+
+    draw(canvas) {
+        let coins = this.coins;
+        for(let i = 0; i < coins.length; ++i) {
+            let coin = coins[i];
+            if (!coin) {
+                continue;
+            }
+            coin.render();
+        }
+    }
+
+    update(state) {
+        let trim = 0;
+        let coins = this.coins;
+        for(let i = 0; i < coins.length; ++i) {
+            let coin = this.coins[i];
+            if (coin) break;
+            ++trim;
+        }
+        if (trim > 0) coins = coins.slice(trim);
+        for(let i = 0; i < coins.length; ++i) {
+            let coin = coins[i];
+            if (!coin) {
+                continue;
+            }
+            if (coin.offset > this.canvas.width + coin.width) {
+                coins[i] = null;
+            }
+            coin.update(state);
+            if (coin.collides(state.balloon)) {
+                ++state.collected;
+                coins[i] = null;
+                continue;
+            }
+        }
+
+        if (this.iteration % 500 === 0) {
+            let canvas = this.canvas;
+            let coin = sprite({
+                context: canvas.getContext("2d"),
+                width: 973,
+                height: 176,
+                image: this.image,
+                numberOfFrames: 7,
+                ticksPerFrame: 4,
+                elevation: Math.random() * canvas.height / 1.5,
+                offset: Math.random() * canvas.width - canvas.width
+            });
+            coins.push(coin);
+        }
+
+        this.coins = coins;
+        ++this.iteration;
+    }
+}
+
+class Bombs {
+    constructor(canvas, image) {
+        this.canvas = canvas;
+        this.image = image;
+        this.items = [];
+        this.iteration = 0;
+    }
+
+    draw(canvas) {
+        let bombs = this.items;
+        for(let i = 0; i < bombs.length; ++i) {
+            let bomb = bombs[i];
+            if (!bomb) {
+                continue;
+            }
+            bomb.render();
+        }
+    }    
+
+    update(state) {
+        let trimBombs = 0;
+        let bombs = this.items;
+        for(let i = 0; i <bombs.length; ++i) {
+            let bomb = bombs[i];
+            if (bomb) break;
+            ++trim;
+        }
+        if (trimBombs > 0) bombs = bombs.slice(trimBombs);
+        for(let i = 0; i < bombs.length; ++i) {
+            let bomb = bombs[i];
+            if (!bomb) {
+                continue;
+            }
+            if (bomb.collides(state.balloon)) {
+                bombs[i] = null;
+                --state.lifes;
+                continue;
+            }
+            bomb.update(state);
+        }
+        if (this.iteration % 500 === 0) {
+            let canvas = this.canvas;
+            let bomb = sprite({
+                context: canvas.getContext("2d"),
+                width: 846,
+                height: 304,
+                image: this.image,
+                numberOfFrames: 3,
+                ticksPerFrame: 4,
+                elevation: Math.random() * canvas.height / 1.5,
+                offset: Math.random() * canvas.width - canvas.width
+            });
+            bombs.push(bomb);
+        }
+        this.items = bombs;
+        ++this.iteration;
+    }
+}
+
+class Images {
+    /**
+     * @param {Array} srcs 
+     */
+    constructor(srcs) {
+        let images = [];
+        let i = 0;
+        for(; i < srcs.length; ++i) {
+            let image = new Image();
+            images.push(image);
+            let src = 'img/' + srcs[i];
+            if (i > 0) {
+                let prevImage = images[i - 1];
+                prevImage.addEventListener('load', () => {
+                    image.src = src;
+                });
+            } else {
+                this.start = src;
+            }
+        }
+        this.images = images;
+    }
+
+    /**
+     * @param {Function} loaded
+     */
+    load(loaded) {
+        let i = this.images.length;
+        if (i > 0) {
+            this.images[i - 1].addEventListener('load', loaded);
+        }
+        this.images[0].src = this.start;
+    }
+
+    get(index) {
+        return this.images[index];
+    }
+}
+
+class Game {
     constructor() {
     }
 
     /**
      * @param {HTMLCanvasElement} canvas
      */
-    play(canvas){
+    play(canvas) {
         let context = canvas.getContext('2d');
-        var collected = 0;
-        var lifes = 3;
-        let coinImage = new Image();
-        let coinCounterImage = new Image();
-        let bombImage = new Image();
-        let emptyHeartImage = new Image();
-        let fullHeartImage = new Image();
-        let balloonImage = new Image();
-        let btnSettingImage = new Image();
-        let btnRestartImage = new Image();
-        let btnControllImage = new Image();
-        let backgroundImage = new Image();
-        backgroundImage.addEventListener('load', () => {
+        let images = new Images([
+            'bg.jpg', 'balloon.svg', 
+            'coin_sprite.png', 'bomb_sprite.png',
+            'coin-for-count.png', 'empty-heart.png', 'heart.png',
+            'up-btn-gamescreen.png', 'settings-gamescreen.png', 
+            'restart-gamescreen.png'
+        ]);
+        images.load(() => {
+            var imid = 0;
+            let backgroundImage = images.get(imid);
+            let background = new Background(canvas, backgroundImage);
             canvas.width = backgroundImage.naturalWidth;
             canvas.height = backgroundImage.naturalHeight;
-            balloonImage.addEventListener('load', () => {
-                let background = new Background(canvas, backgroundImage);
-                this.balloon = new Balloon(canvas, balloonImage);
-                let moving = true;
-                let gameLoop = () => {
-                    // update
-                    moving = this.balloon.altitude > 0 && lifes > 0;
-                    background.update(moving);
-                    this.balloon.update();
-                    // draw
-                    background.draw(context);
-                    this.balloon.draw(context);
 
-                    context.drawImage(emptyHeartImage, 50, 50, emptyHeartImage.width / 7, emptyHeartImage.height / 7);
-                    context.drawImage(emptyHeartImage, 100, 50, emptyHeartImage.width / 7, emptyHeartImage.height / 7);
-                    context.drawImage(emptyHeartImage, 150, 50, emptyHeartImage.width / 7, emptyHeartImage.height / 7);
+            this.balloon = new Balloon(canvas, images.get(++imid));
+            this.coins = new Coins(canvas, images.get(++imid));
+            this.bombs = new Bombs(canvas, images.get(++imid));
 
-                    for (var i = 1; i <= lifes; ++i) {
-                        context.drawImage(fullHeartImage, i*50, 50, fullHeartImage.width / 7, fullHeartImage.height / 7);
-                    }
-                    //context.drawImage(fullHeartImage, 100, 50, fullHeartImage.width / 7, fullHeartImage.height / 7);
-                    // context.drawImage(fullHeartImage, 150, 50, fullHeartImage.width / 7, fullHeartImage.height / 7);
+            let coinCounterImage = images.get(++imid);
+            let emptyHeartImage = images.get(++imid);
+            let fullHeartImage = images.get(++imid);
 
-                    for (let i = 0; i < collected; ++i) {
-                        context.drawImage(coinCounterImage, 400 + i * coinCounterImage.width / 21, 50, coinCounterImage.width / 7, coinCounterImage.height / 7);
-                    }
+            let btnControllImage = images.get(++imid);
+            let btnSettingImage = images.get(++imid);
+            let btnRestartImage = images.get(++imid);
 
-                    context.drawImage(btnSettingImage, 1770, 150, btnSettingImage.width / 3.5, btnSettingImage.height / 3.5);
-                    context.drawImage(btnRestartImage, 1770, 50, btnRestartImage.width / 3.5, btnRestartImage.height / 3.5);
-                    context.drawImage(btnControllImage, 1600, 800, btnControllImage.width / 2, btnControllImage.height / 2);
+            this.lifes = 3;
+            this.collected = 0;
+            this.moving = true;
+            this.speed = 1;
+            let gameLoop = () => {
+                // update
+                this.moving = this.balloon.altitude > 0 && this.lifes > 0;
+                background.update(this);
+                this.balloon.update();
+                this.coins.update(this);
+                this.bombs.update(this);
+                // draw
+                background.draw(context);
+                this.balloon.draw(context);
+                this.coins.draw(context);
+                this.bombs.draw(context);
 
-                };
-                window.setInterval(gameLoop, 1000 / 60);
-            }, false);
-            balloonImage.src = 'img/balloon.svg';
+                context.drawImage(emptyHeartImage, 50, 50, emptyHeartImage.width / 7, emptyHeartImage.height / 7);
+                context.drawImage(emptyHeartImage, 100, 50, emptyHeartImage.width / 7, emptyHeartImage.height / 7);
+                context.drawImage(emptyHeartImage, 150, 50, emptyHeartImage.width / 7, emptyHeartImage.height / 7);
 
-            coinImage.src = 'img/coin.png';
-            coinCounterImage.src = 'img/coin-for-count.png';
+                for (var i = 1; i <= this.lifes; ++i) {
+                    context.drawImage(fullHeartImage, i*50, 50, fullHeartImage.width / 7, fullHeartImage.height / 7);
+                }
+                //context.drawImage(fullHeartImage, 100, 50, fullHeartImage.width / 7, fullHeartImage.height / 7);
+                // context.drawImage(fullHeartImage, 150, 50, fullHeartImage.width / 7, fullHeartImage.height / 7);
 
-            bombImage.src = 'img/bomb.png';
-
-            emptyHeartImage.src = 'img/empty-heart.png';
-            fullHeartImage.src = 'img/heart.png';
-
-            btnSettingImage.src = 'img/restart-gamescreen.png';
-            btnRestartImage.src = 'img/settings-gamescreen.png';
-            btnControllImage.src = 'img/up-btn-gamescreen.png';
-
-
-            let game = this;
-            (function () {
-
-                let coins = [], bombs = [];
-                let coinImage, bombImage;
-                let iteration = 0;
-
-                function gameLoop () {
-
-                    window.requestAnimationFrame(gameLoop);
-
-                    let trim = 0;
-                    for(let i = 0; i < coins.length; ++i) {
-                        let coin = coins[i];
-                        if (coin) break;
-                        ++trim;
-                    }
-
-                    if (trim > 0) coins = coins.slice(trim);
-                    for(let i = 0; i < coins.length; ++i) {
-                        let coin = coins[i];
-                        if (!coin) {
-                            continue;
-                        }
-                        coin.update();
-                        coin.render();
-                        if (coin.collides(game.balloon)) {
-                            ++collected;
-                            coins[i] = null;
-                            continue;
-                        }
-                        if (coin.offset > canvas.width + coin.width) {
-                            coins[i] = null;
-                        }
-                    }
-
-                    if (iteration % 500 === 0) {
-                        let coin = sprite({
-                            context: canvas.getContext("2d"),
-                            width: 973,
-                            height: 176,
-                            image: coinImage,
-                            numberOfFrames: 7,
-                            ticksPerFrame: 4,
-                            elevation: Math.random() * canvas.height / 1.5,
-                            offset: Math.random() * canvas.width - canvas.width
-                        });
-                        coins.push(coin);
-                    }
-
-                    let trimBombs = 0;
-                    for(let i = 0; i <bombs.length; ++i) {
-                        let bomb = bombs[i];
-                        if (bomb) break;
-                        ++trim;
-                    }
-                    if (trimBombs > 0) bombs = bombs.slice(trimBombs);
-                    for(let i = 0; i < bombs.length; ++i) {
-                        let bomb = bombs[i];
-                        if (!bomb) {
-                            continue;
-                        }
-                        if (bomb.collides(game.balloon)) {
-                            bombs[i] = null;
-                            --lifes;
-                            continue;
-                        }
-                        bomb.update();
-                        bomb.render();
-                    }
-                    if (iteration % 500 === 0) {
-                        let bomb = sprite({
-                            context: canvas.getContext("2d"),
-                            width: 846,
-                            height: 304,
-                            image: bombImage,
-                            numberOfFrames: 3,
-                            ticksPerFrame: 4,
-                            elevation: Math.random() * canvas.height / 1.5,
-                            offset: Math.random() * canvas.width - canvas.width
-                        });
-                        bombs.push(bomb);
-                    }
-                        ++iteration;
+                for (let i = 0; i < this.collected; ++i) {
+                    context.drawImage(coinCounterImage, 400 + i * coinCounterImage.width / 21, 50, coinCounterImage.width / 7, coinCounterImage.height / 7);
                 }
 
-                function sprite (options) {
+                context.drawImage(btnSettingImage, 1770, 150, btnSettingImage.width / 3.5, btnSettingImage.height / 3.5);
+                context.drawImage(btnRestartImage, 1770, 50, btnRestartImage.width / 3.5, btnRestartImage.height / 3.5);
+                context.drawImage(btnControllImage, 1600, 800, btnControllImage.width / 2, btnControllImage.height / 2);
 
-                    let that = {},
-                        frameIndex = 0,
-                        tickCount = 0,
-                        ticksPerFrame = options.ticksPerFrame || 0,
-                        numberOfFrames = options.numberOfFrames || 1;
-
-                    that.context = options.context;
-                    that.width = options.width;
-                    that.height = options.height;
-                    that.image = options.image;
-                    that.elevation = options.elevation;
-                    that.offset = options.offset || 0;
-
-                    that.update = function () {
-
-                        tickCount += 1;
-
-                        if (tickCount > ticksPerFrame) {
-
-                            tickCount = 0;
-
-                            // If the current frame index is in range
-                            if (frameIndex < numberOfFrames - 1) {
-                                // Go to the next frame
-                                frameIndex += 1;
-                            } else {
-                                frameIndex = 0;
-                            }
-                        }
-                        that.offset += 1;
-                    };
-
-                    that.render = function () {
-
-                        // Draw the animation
-                        that.context.drawImage(that.image,
-                            frameIndex * that.width / numberOfFrames,
-                            0,
-                            that.width / numberOfFrames,
-                            that.height,
-                            canvas.width - that.offset,
-                            that.elevation,
-                            that.width / numberOfFrames,
-                            that.height);
-                    };
-
-                    that.collides = (balloon) => {
-                        let radius = that.height / 4;
-                        let x = canvas.width - that.offset + radius + radius / 1.5;
-                        let y = that.elevation + radius + radius / 1.5;
-//                        that.context.beginPath();
-//                        that.context.arc(x, y, radius, radius, Math.PI * 2, true);
-//                        that.context.stroke();
-                        let circle = balloon.getCollisionCircle();
-                        let dx = x - circle.x;
-                        let dy = y - circle.y;
-                        let distance = Math.sqrt(dx * dx + dy * dy);
-                        return distance < radius + circle.radius;
-                    };
-
-                    return that;
-                }
-
-                // Create sprite sheet
-                coinImage = new Image();
-                bombImage = new Image();
-
-                // Load sprite sheet
-                coinImage.addEventListener("load", gameLoop);
-                coinImage.src = "img/coin_sprite.png";
-                bombImage.addEventListener("load", gameLoop);
-                bombImage.src = "img/bomb_sprite.png";
-
-            } ());
-        }, false);
-        backgroundImage.src = 'img/bg.jpg';
+                window.requestAnimationFrame(gameLoop);
+            };
+            window.requestAnimationFrame(gameLoop);
+        });
     }
 }
